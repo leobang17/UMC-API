@@ -1,0 +1,19 @@
+{
+  "name": "twitter",
+  "version": "1.0.0",
+  "description": "UMC API practice, cloning Twitter.",
+  "main": "app.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/leobang17/UMC-API.git"
+  },
+  "author": "LeoBang",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/leobang17/UMC-API/issues"
+  },
+  "homepage": "https://github.com/leobang17/UMC-API#readme"
+}
