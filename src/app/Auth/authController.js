@@ -32,18 +32,24 @@ exports.authJoin = async (req, res) => {
     return res.send(joinResponse);
 }
 
+exports.authLogin = async (req, res) => {
+    const { email, password } = req.body;
+    const loginResponse = await authService.login(email, password);
+    return res.send(loginResponse);
+}
+
 exports.test = async (req, res) => {
     const connection = await pool.getConnection(async (conn) => conn);
-    const results = await connection.query(`
-        SELECT email, nickname
+    const [results] = await connection.query(`
+        SELECT email, nickname, password
         FROM User
         WHERE email = "bluke17@naver.com";
     `);
     connection.release();
-    if (results[0]) {
-        console.log("없다 이놈아");
-    } else {
-        console.log("있다 이놈아");
-    }
-    return res.send(results[0]);
+    // if (results[0]) {
+    //     console.log("없다 이놈아");
+    // } else {
+    //     console.log("있다 이놈아");
+    // }
+    return res.send(results);
 }
