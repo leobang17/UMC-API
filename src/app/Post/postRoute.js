@@ -18,7 +18,25 @@ router.route('/:id/likes')
     .delete()
 
 
-router.route('/:id/')
+router.route('/:id/bookmarks')
+    .post()
+    .delete()
+
+
+router.route('/:id/comment')
+    .get()
+    .post()
+
+
+router.route('/:postId/comment/:commentId')
+    .delete()
+    .patch()
+
+
+router.get('/search')
+
+
+router.get('/hashtag/:id')
 
 
 module.exports = router;

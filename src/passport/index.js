@@ -3,7 +3,8 @@ const baseResponse = require('../../config/baseResponseStatus');
 const { response, errResponse } = require('../../config/response');
 require('dotenv').config();
 
-
+// passport를 이용하지는 않았지만, req.user에 유저 정보를 전달하는 middleware (passport의 deserializeUser 같이)가 필요한 것 같아 만듦.
+// jwt를 해독한 다음, 해당 값을 req.user에 전달.
 const saveUserInfo = async (req, res, next) => {
     const token = req.headers.x_access_token || req.query.token;
     
@@ -24,7 +25,6 @@ const saveUserInfo = async (req, res, next) => {
 
         return res.send(errResponse(baseResponse.TOKEN_VERIFICATION_FAILURE));
     }
-        
 }
 
 
