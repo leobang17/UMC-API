@@ -26,3 +26,11 @@ exports.createPost = async (req, res) => {
 
     return res.send(createPostRes);
 };
+
+
+exports.getPost = async (req, res) => {
+    const postIdx = req.params.id;
+    const getPostRes = await postService.getPost({ postIdx });
+
+    return res.send(getPostRes);
+}

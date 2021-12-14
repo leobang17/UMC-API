@@ -7,21 +7,23 @@ require('dotenv').config();
 
 const router = express.Router();
 
+router.get('/test', async (req, res) => {
+    const connection = await pool.getConnection(async (conn) => conn);
+    const query = `SELECT * FROM Post;`;
+    const [getRow] = await connection.query(query);
+    connection.release()
+
+    res.send(getRow);
+})
+
+
 router.route('/')
     // .get(post.getMainFeeds)
-    .get(async (req, res) => {
-        const connection = await pool.getConnection(async (conn) => conn);
-        const query = `SELECT * FROM Post;`;
-        const [getRow] = await connection.query(query);
-        connection.release()
-
-        res.send(getRow);
-    })
     .post(post.createPost)
 
 
 router.route('/:id')
-    .get()
+    .get(post.getPost)
     .patch()
     .delete()
 
@@ -50,6 +52,8 @@ router.get('/search')
 
 
 router.get('/hashtag/:id')
+
+
 
 
 module.exports = router;

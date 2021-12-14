@@ -21,8 +21,30 @@ exports.createImgUrl = async (connection, params) => {
     connection.query(query);
 }
 
+exports.getPost = async (connection, params) => {
+    const { postIdx } = params;
+    const query = `
+        SELECT postIdx, content
+        FROM Post
+        WHERE Post.postIdx = "${postIdx}"
+    `;
+    const [[postRows]] = await connection.query(query);
+    return postRows;
+}
 
-exports.getPostIdx = async (connection) => {
+exports.getPostImg = async (connection, params) => {
+    const { postIdx } = params;
+    const query = `
+        SELECT postImgIdx, imgUrl
+        FROM PostImg
+        WHERE PostImg.postIdx = "${postIdx}";
+    `
+    const [postImgRows] = await connection.query(query);
+    return postImgRows;
+}
+
+
+exports.getLastIdx = async (connection) => {
     const query = `
         SELECT LAST_INSERT_ID();
     `;
