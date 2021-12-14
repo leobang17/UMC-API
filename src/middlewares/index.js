@@ -6,7 +6,7 @@ const { response, errResponse} = require('../../config/response');
 require('dotenv').config();
 
 exports.verifyToken = async (req, res, next) => {
-    const token = req.headers['x-access-token'] || req.query.token;
+    const token = req.headers.x_access_token || req.query.token;
     
     // jwt가 없을 경우 
     if (!token)
@@ -21,6 +21,5 @@ exports.verifyToken = async (req, res, next) => {
         };
 
         return res.send(errResponse(baseResponse.TOKEN_VERIFICATION_FAILURE));
-    }
-    
-}
+    }   
+};
