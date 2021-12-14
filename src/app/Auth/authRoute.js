@@ -1,6 +1,7 @@
 const express = require('express');
 const { pool } = require('../../../config/database');
 const auth = require('./authController');
+const { verifyToken } = require('../../middlewares');
 
 const router = express.Router();
 
@@ -18,7 +19,11 @@ router.post('/join', auth.authJoin);
 
 router.post('/login', auth.authLogin);
 
+router.get('/logout', verifyToken, auth.authLogout);
+
 router.get('/test', auth.test);
+
+router.get('/jwt-test', verifyToken, auth.jwtTest);
 
 
 module.exports = router;
