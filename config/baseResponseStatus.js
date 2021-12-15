@@ -37,8 +37,11 @@ module.exports = {
 
     POST_CONTENT_EMPTY : { "isSuccess": false, "code": 2019, "message": "글은 1글자 이상 작성해야 합니다."},
 
-    LIKE_ALREADY_EXISTS : { "isSuccess": false, "code": 2020, "message": "이미 좋아요를 눌렀습니다" },
+    LIKE_ALREADY_EXISTS : { "isSuccess": false, "code": 2020, "message": "이미 좋아요를 누른 글입니다." },
     LIKE_EMPTY: { "isSuccess": false, "code": 2021, "message": "좋아요가 되어있지 않은 상태 입니다." },
+
+    BOOKMARK_ALREADY_EXISTS : { "isSuccess": false, "code": 2022, "message": "이미 북마크한 글입니다." },
+    BOOKMARK_EMPTY : { "isSuccess": false, "code": 2023, "message": "북마크가 되어있지 않은 상태 입니다." },
 
     // Response error
     SIGNUP_REDUNDANT_EMAIL : { "isSuccess": false, "code": 3001, "message":"중복된 이메일입니다." },
