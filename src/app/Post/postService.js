@@ -38,3 +38,18 @@ exports.getPost = async ({ postIdx }) => {
       return errResponse(baseResponse.DB_ERROR);
   }
 };
+
+
+exports.createLike = async (params) => {
+    const { postIdx, userIdx } = params;
+    
+    try {
+        const connection = await pool.getConnection(async (conn) => conn);
+        const createLikeRes = await postDao.createLike(connection, { postIdx, userIdx });
+        connection.release();
+        return createLikeRes, response(baseResponse.SUCCESS);
+    } catch(err) {
+        console.error(err);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+}

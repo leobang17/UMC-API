@@ -6,8 +6,8 @@ const { response, errResponse } = require('../../../config/response');
 
 exports.getMainFeeds = async (req, res) => {
     const userInfo = req.user;
-    
 }
+
 
 exports.createPost = async (req, res) => {
     const { userIdx } = req.user;
@@ -20,10 +20,6 @@ exports.createPost = async (req, res) => {
         유저 값들: ${req.body.imgUrl[0].url}
     `)
     const createPostRes = await postService.createPost({ userIdx, content, imgUrl });
-    
-    // userIdx를 받아서, create
-    // userIdx -> body에 담긴 데이터를 받아서 확인하고, 
-
     return res.send(createPostRes);
 };
 
@@ -33,4 +29,12 @@ exports.getPost = async (req, res) => {
     const getPostRes = await postService.getPost({ postIdx });
 
     return res.send(getPostRes);
+}
+
+exports.createLike = async (req, res) => {
+    const postIdx = req.params.id;
+    const { userIdx } = req.user;
+    const createLikeRes = await postService.createLike({ postIdx, userIdx });
+
+    return res.send(createLikeRes);
 }

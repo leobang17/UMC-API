@@ -29,7 +29,7 @@ router.route('/:id')
 
 
 router.route('/:id/likes')
-    .post()
+    .post(post.createLike)
     .delete()
 
 

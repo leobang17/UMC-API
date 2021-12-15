@@ -43,11 +43,22 @@ exports.getPostImg = async (connection, params) => {
     return postImgRows;
 }
 
-
 exports.getLastIdx = async (connection) => {
     const query = `
         SELECT LAST_INSERT_ID();
     `;
     const [postIdx] = await connection.query(query);
     return postIdx;
+}
+
+exports.createLike = async (connection, params) => {
+    const { userIdx, postIdx } = params; 
+    const query = `
+        INSERT INTO PostLike
+        (postIdx, userIdx)
+        VALUES
+        ("${postIdx}", "${userIdx}");
+    `;
+    const [likeRows] = await connection.query(query);
+    return likeRows;
 }
