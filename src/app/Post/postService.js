@@ -28,9 +28,15 @@ exports.getPost = async ({ postIdx }) => {
   try {
         const connection = await pool.getConnection(async (conn) => conn);
         const getPostRes = await postDao.getPost(connection, { postIdx });
+        
+        if (!getPostRes) {
+            connection.release();
+            return errResponse(baseResponse.POST_NOT_EXIST);
+        }
+
         const getPostImgRes = await postDao.getPostImg(connection, { postIdx });
         getPostRes.imgUrl = getPostImgRes;
-        console.log(getPostRes);
+
         connection.release();
         return getPostRes;
   } catch (err) {
@@ -39,6 +45,32 @@ exports.getPost = async ({ postIdx }) => {
   }
 };
 
+
+exports.deletePost = async (serviceParams) => {
+    const { userIdx, postIdx } = serviceParams;
+    try {
+        const connection = await pool.getConnection(async (conn) => conn);
+        const getPostRes = await postDao.getPost(connection, { postIdx });
+        
+        if (!getPostRes) {
+            connection.release();
+            return errResponse(baseResponse.POST_NOT_EXIST);
+        }
+    
+        if (userIdx !== getPostRes.userIdx) {
+            connection.release();
+            return errResponse(baseResponse.DELETE_POST_WRONG_USER);
+        };
+        
+        const deletePostRes = await postDao.deletePost(connection, { userIdx, postIdx });
+        connection.release();
+
+        return deletePostRes, response(baseResponse.SUCCESS);
+    } catch(err) {
+        console.error(err);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+}
 
 exports.createLikeOrBookmark = async (params) => {
     const { postIdx, userIdx, targetTable } = params;
@@ -82,7 +114,7 @@ exports.deleteLikeOrBookmark = async (params) => {
         connection.release();
 
         return deleteLikeRes, response(baseResponse.SUCCESS);
-        
+
     } catch (err) {
         console.error(err);
         return errResponse(baseResponse.DB_ERROR);

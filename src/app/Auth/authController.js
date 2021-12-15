@@ -51,7 +51,7 @@ exports.test = async (req, res) => {
     const connection = await pool.getConnection(async (conn) => conn);
     const [results] = await connection.query(`
         SELECT email, nickname, password
-        FROM User아
+        FROM User
         WHERE email = "bluke17@naver.com";
     `);
     connection.release();

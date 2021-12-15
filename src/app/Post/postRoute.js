@@ -25,7 +25,7 @@ router.route('/')
 router.route('/:id')
     .get(post.getPost)
     .patch()
-    .delete()
+    .delete(post.deletePost)
 
 
 router.route('/:id/postlike')

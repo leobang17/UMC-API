@@ -31,6 +31,16 @@ exports.getPost = async (req, res) => {
     return res.send(getPostRes);
 }
 
+exports.deletePost = async (req, res) => {
+    const serviceParams = {
+        postIdx: req.params.id,
+        userIdx: req.user.userIdx
+    };
+    const deletePostRes = await postService.deletePost(serviceParams);
+
+    return res.send(deletePostRes);
+}
+
 exports.createLikeOrBookmark = async (req, res) => {
     const postIdx = req.params.id;
     const { userIdx } = req.user;

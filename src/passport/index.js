@@ -14,6 +14,7 @@ const saveUserInfo = async (req, res, next) => {
     } 
     try {
         const tokenDecoded = await jwt.verify(token, process.env.JWT_SECRET);
+        console.log(tokenDecoded);
         req.user = tokenDecoded;
 
         return next();

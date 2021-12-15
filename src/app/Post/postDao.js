@@ -24,11 +24,23 @@ exports.createImgUrl = async (connection, params) => {
 exports.getPost = async (connection, params) => {
     const { postIdx } = params;
     const query = `
-        SELECT postIdx, content
-        FROM Post
-        WHERE Post.postIdx = "${postIdx}"
+        SELECT p.postIdx, u.userIdx, u.nickname, p.content, p.createdAt
+        FROM Post p
+        JOIN User u 
+        ON p.userIdx = u.userIdx
+        WHERE p.postIdx = "${postIdx}"
     `;
     const [[postRows]] = await connection.query(query);
+    return postRows;
+}
+
+exports.deletePost = async (connection, params) => {
+    const { userIdx, postIdx } = params;
+    const query = `
+        DELETE FROM Post
+        WHERE postIdx = "${postIdx}" and userIdx = "${userIdx}";
+    `;
+    const [postRows] = await connection.query(query);
     return postRows;
 }
 
