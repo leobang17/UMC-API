@@ -31,18 +31,24 @@ exports.getPost = async (req, res) => {
     return res.send(getPostRes);
 }
 
-exports.createLike = async (req, res) => {
+exports.createLikeOrBookmark = async (req, res) => {
     const postIdx = req.params.id;
     const { userIdx } = req.user;
-    const createLikeRes = await postService.createLike({ postIdx, userIdx });
+    // route가 bookmarks인지, likes인지 
+    const pathSplitted = req.route.path.split('/');
+    const targetTable = pathSplitted[pathSplitted.length - 1];
+    const createLikeRes = await postService.createLikeOrBookmark({ postIdx, userIdx, targetTable });
 
     return res.send(createLikeRes);
-}
+};
 
-exports.deleteLike = async (req, res) => {
+exports.deleteLikeOrBookmark = async (req, res) => {
     const postIdx = req.params.id;
     const { userIdx } = req.user;
-    const deleteLikeRes = await postService.deleteLike({ postIdx, userIdx });
+    // route가 bookmark인지, likes 인지
+    const pathSplitted = req.route.path.split('/');
+    const targetTable = pathSplitted[pathSplitted.length - 1];
+    const deleteLikeRes = await postService.deleteLikeOrBookmark({ postIdx, userIdx, targetTable });
 
     return res.send(deleteLikeRes);
-}
+};

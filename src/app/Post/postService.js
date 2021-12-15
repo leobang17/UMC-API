@@ -40,38 +40,49 @@ exports.getPost = async ({ postIdx }) => {
 };
 
 
-exports.createLike = async (params) => {
-    const { postIdx, userIdx } = params;
+exports.createLikeOrBookmark = async (params) => {
+    const { postIdx, userIdx, targetTable } = params;
 
     try {
-        const likeExists = await postProvider.likeCheck({ postIdx, userIdx });
-        console.log(likeExists);
-        if (likeExists.length > 0)
-            return errResponse(baseResponse.LIKE_ALREADY_EXISTS);
+        const doExist = await postProvider.likeOrBookmarkCheck({ postIdx, userIdx, targetTable });
+        console.log(doExist);
+        if (doExist.length > 0){
+            if (targetTable === "postlike")
+                return errResponse(baseResponse.LIKE_ALREADY_EXISTS);
+            if (targetTable === "bookmark")
+                return errResponse(baseResponse.BOOKMARK_ALREADY_EXISTS);
+        }
 
         const connection = await pool.getConnection(async (conn) => conn);
-        const createLikeRes = await postDao.createLike(connection, { postIdx, userIdx });
+        const createLikeRes = await postDao.createLikeOrBookmark(connection, { postIdx, userIdx, targetTable });
         connection.release();
+
         return createLikeRes, response(baseResponse.SUCCESS);
+
     } catch(err) {
         console.error(err);
         return errResponse(baseResponse.DB_ERROR);
     }
 }
 
-exports.deleteLike = async (params) => {
-    const { postIdx, userIdx } = params;
+exports.deleteLikeOrBookmark = async (params) => {
+    const { postIdx, userIdx, targetTable } = params;
     
     try {
-        const likeExists = await postProvider.likeCheck(params);
-        if (likeExists.length < 1)
-            return errResponse(baseResponse.LIKE_EMPTY);
+        const doExist = await postProvider.likeOrBookmarkCheck(params);
+        if (doExist.length < 1) {
+            if (targetTable === "postlike") 
+                return errResponse(baseResponse.LIKE_EMPTY);
+            if (targetTable === "bookmark")
+                return errResponse(baseResponse.BOOKMARK_EMPTY);
+        }
 
         const connection = await pool.getConnection(async (conn) => conn);
-        const deleteLikeRes = await postDao.deleteLike(connection, { postIdx, userIdx });
+        const deleteLikeRes = await postDao.deleteLikeOrBookmark(connection, { postIdx, userIdx, targetTable });
         connection.release();
 
         return deleteLikeRes, response(baseResponse.SUCCESS);
+        
     } catch (err) {
         console.error(err);
         return errResponse(baseResponse.DB_ERROR);

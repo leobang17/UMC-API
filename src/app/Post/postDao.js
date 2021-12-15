@@ -51,36 +51,36 @@ exports.getLastIdx = async (connection) => {
     return postIdx;
 }
 
-exports.createLike = async (connection, params) => {
-    const { userIdx, postIdx } = params; 
+exports.createLikeOrBookmark = async (connection, params) => {
+    const { userIdx, postIdx, targetTable } = params; 
     const query = `
-        INSERT INTO PostLike
+        INSERT INTO ${targetTable}
         (postIdx, userIdx)
         VALUES
         ("${postIdx}", "${userIdx}");
     `;
-    const [likeRows] = await connection.query(query);
-    return likeRows;
+    const [likeOrBookmarkRows] = await connection.query(query);
+    return likeOrBookmarkRows;
 }
 
-exports.deleteLike = async (connection, params) => {
-    const { userIdx, postIdx } = params;
+exports.deleteLikeOrBookmark = async (connection, params) => {
+    const { userIdx, postIdx, targetTable } = params;
     const query = `
-        DELETE FROM PostLike
+        DELETE FROM ${targetTable}
         WHERE
         postIdx = "${postIdx}" and userIdx = "${userIdx}";
     `;
-    const [likeRows] = await connection.query(query);
-    return likeRows;
+    const [likeOrBookmarkRows] = await connection.query(query);
+    return likeOrBookmarkRows;
 }
 
-exports.likeCheck = async (connection, params) => {
-    const { userIdx, postIdx } = params;
+exports.likeOrBookmarkCheck = async (connection, params) => {
+    const { userIdx, postIdx, targetTable } = params;
     const query = `
         SELECT postIdx, userIdx
-        FROM PostLike
+        FROM ${targetTable}
         WHERE postIdx = "${postIdx}" and userIdx = "${userIdx}"
     `;
-    const [likeRows] = await connection.query(query);
-    return likeRows;
+    const [likeOrBookmarkRows] = await connection.query(query);
+    return likeOrBookmarkRows;
 }

@@ -3,14 +3,14 @@ const { pool } = require('../../../config/database');
 const { errResponse } = require('../../../config/response');
 const postDao = require('./postDao');
 
-exports.likeCheck = async (params) => {
-    const { userIdx, postIdx } = params;
+exports.likeOrBookmarkCheck = async (params) => {
+    const { userIdx, postIdx, targetTable } = params;
     
     try {
         const connection = await pool.getConnection(async (conn) => conn);
-        const likeCheckRes = await postDao.likeCheck(connection, { userIdx, postIdx });
+        const checkRes = await postDao.likeOrBookmarkCheck(connection, { userIdx, postIdx, targetTable });
         connection.release();
-        return likeCheckRes;
+        return checkRes;
     } catch(err) {
         console.log(err)
         return errResponse(baseResponse.DB_ERROR);

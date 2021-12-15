@@ -28,14 +28,14 @@ router.route('/:id')
     .delete()
 
 
-router.route('/:id/likes')
-    .post(post.createLike)
-    .delete(post.deleteLike)
+router.route('/:id/postlike')
+    .post(post.createLikeOrBookmark)
+    .delete(post.deleteLikeOrBookmark)
 
 
-router.route('/:id/bookmarks')
-    .post()
-    .delete()
+router.route('/:id/bookmark')
+    .post(post.createLikeOrBookmark)
+    .delete(post.deleteLikeOrBookmark)
 
 
 router.route('/:id/comment')
