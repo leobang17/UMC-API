@@ -5,11 +5,12 @@ const cookieParser = require('cookie-parser');
 const morgan = require('morgan');
 const cors = require('cors');
 const dotenv = require('dotenv');
-const passportTest = require('../src/passport');
+const saveUserInfo = require('../src/passport');
 
 
 // Require Router
 const { authRouter, postRouter, userRouter } = require('../src/app');
+const { verifyToken } = require('../src/middlewares');
 
 
 // ENV variables
@@ -26,6 +27,7 @@ app.use(express.urlencoded({ extended: false }));
 app.use(cookieParser());
 app.use(morgan('dev'));
 app.use(cors());
+app.use(saveUserInfo);
 app.use(session({
     resave: false,
     saveUninitialized: false,
@@ -36,13 +38,12 @@ app.use(session({
     },
     name: 'session-cookie'
 }))
-app.use(passportTest);
 
 
 // Routers
 app.use('/api/auth', authRouter);
-app.use('/api/post', postRouter);
-app.use('/api/user', userRouter);
+app.use('/api/post', verifyToken, postRouter);
+app.use('/api/user', verifyToken, userRouter);
 
 
 module.exports = app;

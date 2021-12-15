@@ -35,6 +35,11 @@ module.exports = {
 
     USER_STATUS_EMPTY : { "isSuccess": false, "code": 2018, "message": "회원 상태값을 입력해주세요" },
 
+    POST_CONTENT_EMPTY : { "isSuccess": false, "code": 2019, "message": "글은 1글자 이상 작성해야 합니다."},
+
+    LIKE_ALREADY_EXISTS : { "isSuccess": false, "code": 2020, "message": "이미 좋아요를 눌렀습니다" },
+    LIKE_EMPTY: { "isSuccess": false, "code": 2021, "message": "좋아요가 되어있지 않은 상태 입니다." },
+
     // Response error
     SIGNUP_REDUNDANT_EMAIL : { "isSuccess": false, "code": 3001, "message":"중복된 이메일입니다." },
     SIGNUP_REDUNDANT_NICKNAME : { "isSuccess": false, "code": 3002, "message":"중복된 닉네임입니다." },
