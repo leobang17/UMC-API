@@ -72,6 +72,28 @@ exports.deletePost = async (serviceParams) => {
     }
 }
 
+exports.createComment = async (params) => {
+    const { postIdx, userIdx, content } = params;
+    try {
+        const connection = await pool.getConnection(async (conn) => conn);
+        const getPostRes = await postDao.getPost(connection, { postIdx });
+        
+        if (!getPostRes) {
+            connection.release();
+            return errResponse(baseResponse.POST_NOT_EXIST);
+        };
+
+        const createCommentRes = await postDao.createComment(connection, { postIdx, userIdx, content });
+        connection.release();
+        
+        return createCommentRes, response(baseResponse.SUCCESS);
+    } catch (err) {
+        console.error(err);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+    
+}
+
 exports.createLikeOrBookmark = async (params) => {
     const { postIdx, userIdx, targetTable } = params;
 

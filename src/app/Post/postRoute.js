@@ -40,7 +40,7 @@ router.route('/:id/bookmark')
 
 router.route('/:id/comment')
     .get()
-    .post()
+    .post(post.createComment)
 
 
 router.route('/:postId/comment/:commentId')

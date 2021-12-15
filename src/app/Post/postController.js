@@ -15,10 +15,7 @@ exports.createPost = async (req, res) => {
     
     if (!content) 
         return res.send(response(baseResponse.POST_CONTENT_EMPTY));
-    console.log(`
-        유저 인덱스: ${userIdx},
-        유저 값들: ${req.body.imgUrl[0].url}
-    `)
+    
     const createPostRes = await postService.createPost({ userIdx, content, imgUrl });
     return res.send(createPostRes);
 };
@@ -39,6 +36,18 @@ exports.deletePost = async (req, res) => {
     const deletePostRes = await postService.deletePost(serviceParams);
 
     return res.send(deletePostRes);
+}
+
+exports.createComment = async (req, res) => {
+    const serviceParams = {
+        postIdx: req.params.id,
+        userIdx: req.user.userIdx,
+        content: req.body.content,
+    };
+
+    const createCommentRes = await postService.createComment(serviceParams);
+
+    return res.send(createCommentRes);
 }
 
 exports.createLikeOrBookmark = async (req, res) => {

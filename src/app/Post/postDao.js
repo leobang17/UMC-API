@@ -63,6 +63,18 @@ exports.getLastIdx = async (connection) => {
     return postIdx;
 }
 
+exports.createComment = async (connection, params) => {
+    const { postIdx, userIdx, content } = params;
+    const query = `
+        INSERT INTO Comment
+        (postIdx, userIdx, content)
+        VALUES 
+        ("${postIdx}", "${userIdx}", "${content}");
+    `;
+    const [commentRows] = await connection.query(query);
+    return commentRows;
+}
+
 exports.createLikeOrBookmark = async (connection, params) => {
     const { userIdx, postIdx, targetTable } = params; 
     const query = `
