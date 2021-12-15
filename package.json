@@ -29,6 +29,7 @@
     "passport": "^0.5.0",
     "passport-kakao": "^1.0.1",
     "passport-local": "^1.0.0",
+    "regex-email": "^1.0.2",
     "winston": "^3.3.3"
   },
   "devDependencies": {
