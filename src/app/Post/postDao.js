@@ -62,3 +62,25 @@ exports.createLike = async (connection, params) => {
     const [likeRows] = await connection.query(query);
     return likeRows;
 }
+
+exports.deleteLike = async (connection, params) => {
+    const { userIdx, postIdx } = params;
+    const query = `
+        DELETE FROM PostLike
+        WHERE
+        postIdx = "${postIdx}" and userIdx = "${userIdx}";
+    `;
+    const [likeRows] = await connection.query(query);
+    return likeRows;
+}
+
+exports.likeCheck = async (connection, params) => {
+    const { userIdx, postIdx } = params;
+    const query = `
+        SELECT postIdx, userIdx
+        FROM PostLike
+        WHERE postIdx = "${postIdx}" and userIdx = "${userIdx}"
+    `;
+    const [likeRows] = await connection.query(query);
+    return likeRows;
+}

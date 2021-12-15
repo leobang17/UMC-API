@@ -42,13 +42,37 @@ exports.getPost = async ({ postIdx }) => {
 
 exports.createLike = async (params) => {
     const { postIdx, userIdx } = params;
-    
+
     try {
+        const likeExists = await postProvider.likeCheck({ postIdx, userIdx });
+        console.log(likeExists);
+        if (likeExists.length > 0)
+            return errResponse(baseResponse.LIKE_ALREADY_EXISTS);
+
         const connection = await pool.getConnection(async (conn) => conn);
         const createLikeRes = await postDao.createLike(connection, { postIdx, userIdx });
         connection.release();
         return createLikeRes, response(baseResponse.SUCCESS);
     } catch(err) {
+        console.error(err);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+}
+
+exports.deleteLike = async (params) => {
+    const { postIdx, userIdx } = params;
+    
+    try {
+        const likeExists = await postProvider.likeCheck(params);
+        if (likeExists.length < 1)
+            return errResponse(baseResponse.LIKE_EMPTY);
+
+        const connection = await pool.getConnection(async (conn) => conn);
+        const deleteLikeRes = await postDao.deleteLike(connection, { postIdx, userIdx });
+        connection.release();
+
+        return deleteLikeRes, response(baseResponse.SUCCESS);
+    } catch (err) {
         console.error(err);
         return errResponse(baseResponse.DB_ERROR);
     }

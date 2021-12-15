@@ -38,3 +38,11 @@ exports.createLike = async (req, res) => {
 
     return res.send(createLikeRes);
 }
+
+exports.deleteLike = async (req, res) => {
+    const postIdx = req.params.id;
+    const { userIdx } = req.user;
+    const deleteLikeRes = await postService.deleteLike({ postIdx, userIdx });
+
+    return res.send(deleteLikeRes);
+}
