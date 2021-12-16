@@ -44,7 +44,7 @@ router.route('/:id/comment')
 
 
 router.route('/:postId/comment/:commentId')
-    .delete()
+    .delete(post.deleteComment)
     .patch()
 
 

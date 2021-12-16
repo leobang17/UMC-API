@@ -90,8 +90,28 @@ exports.createComment = async (params) => {
     } catch (err) {
         console.error(err);
         return errResponse(baseResponse.DB_ERROR);
+    }   
+}
+
+exports.deleteComment = async (params) => {
+    const { commentIdx, userIdx } = params;
+    try {
+        const commentExist = await postProvider.commentCheck({ commentIdx });
+        if (!commentExist) {
+            return errResponse(baseResponse.COMMENT_NOT_EXIST);
+        }
+        if (commentExist.userIdx !== userIdx) {
+            return errResponse(baseResponse.DELETE_COMMENT_WRONG_USER);
+        }
+
+        const connection = await pool.getConnection();
+        const deleteCommentRes = await postDao.deleteComment(connection, { commentIdx });
+        connection.release();
+        return deleteCommentRes, response(baseResponse.SUCCESS);
+    } catch(err) {
+        console.error(err);
+        return errResponse(baseResponse.DB_ERROR);
     }
-    
 }
 
 exports.createLikeOrBookmark = async (params) => {

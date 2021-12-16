@@ -17,3 +17,16 @@ exports.likeOrBookmarkCheck = async (params) => {
     }
 }
 
+exports.commentCheck = async (params) => {
+    const { commentIdx } = params;
+    
+    try {
+        const connection = await pool.getConnection(async (conn) => conn);
+        const commentCheckRes = await postDao.commentCheck(connection, { commentIdx });
+        connection.release();
+        return commentCheckRes;
+    } catch (err) {
+        console.error(err);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+}

@@ -1,3 +1,4 @@
+// Services
 exports.createPost = async (connection, params) => {
     const { content, userIdx } = params;
     const query = `
@@ -75,6 +76,17 @@ exports.createComment = async (connection, params) => {
     return commentRows;
 }
 
+exports.deleteComment = async (connection, params) => {
+    const { commentIdx } = params;
+    const query = `
+        DELETE FROM Comment
+        WHERE commentIdx = "${commentIdx}";
+    `;
+    const [commentRows] = await connection.query(query);
+    return commentRows;
+}
+
+
 exports.createLikeOrBookmark = async (connection, params) => {
     const { userIdx, postIdx, targetTable } = params; 
     const query = `
@@ -97,6 +109,21 @@ exports.deleteLikeOrBookmark = async (connection, params) => {
     const [likeOrBookmarkRows] = await connection.query(query);
     return likeOrBookmarkRows;
 }
+
+
+// Provider
+exports.commentCheck = async (connection, params) => {
+    const { commentIdx } = params;
+    const query = `
+        SELECT postIdx, userIdx
+        FROM Comment
+        WHERE commentIdx = "${commentIdx}";
+    `;
+    const [[commentRows]] = await connection.query(query);
+    return commentRows;
+    
+}
+
 
 exports.likeOrBookmarkCheck = async (connection, params) => {
     const { userIdx, postIdx, targetTable } = params;
