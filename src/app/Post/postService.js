@@ -23,7 +23,6 @@ exports.createPost = async ({ userIdx, content, imgUrl }) => {
     }
 }
 
-
 exports.getPost = async ({ postIdx }) => {
   try {
         const connection = await pool.getConnection(async (conn) => conn);
@@ -44,6 +43,19 @@ exports.getPost = async ({ postIdx }) => {
       return errResponse(baseResponse.DB_ERROR);
   }
 };
+
+exports.searchPost = async (params) => {
+    const { keywords } = params;
+    try {
+        const connection = await pool.getConnection(async (conn) => conn);
+        const searchPostRes = await postDao.searchPost(connection, { keywords });
+        connection.release()
+        return searchPostRes;
+    } catch(err) {
+        console.error(err);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+}
 
 exports.updatePost = async (params) => {
     const { userIdx, postIdx, content, imgUrl } = params;

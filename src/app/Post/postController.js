@@ -108,3 +108,11 @@ exports.deleteLikeOrBookmark = async (req, res) => {
 
     return res.send(deleteLikeRes);
 };
+
+exports.searchPost = async (req, res) => {
+    const keywords = req.query.keyword.split("+");
+    
+    const searchPostRes = await postService.searchPost({ keywords });
+
+    return res.send(searchPostRes);
+}

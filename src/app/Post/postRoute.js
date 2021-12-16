@@ -14,13 +14,14 @@ router.get('/test', async (req, res) => {
     connection.release()
 
     res.send(getRow);
-})
-
+});
 
 router.route('/')
     // .get(post.getMainFeeds)
     .post(post.createPost)
 
+
+router.get('/search', post.searchPost);
 
 router.route('/:id')
     .get(post.getPost)
@@ -46,9 +47,6 @@ router.route('/:id/comment')
 router.route('/:postId/comment/:commentId')
     .delete(post.deleteComment)
     .patch(post.updateComment)
-
-
-router.get('/search')
 
 
 router.get('/hashtag/:id')

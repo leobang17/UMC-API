@@ -97,6 +97,30 @@ exports.createComment = async (connection, params) => {
     return commentRows;
 }
 
+exports.searchPost = async (connection, params) => {
+    const { keywords } = params;
+    let whereQuery = "";
+    keywords.map((keyword, index) => {
+        if (index !== keywords.length - 1) {
+            whereQuery += `content LIKE "%${keyword}%" OR \n`
+        } else {
+            whereQuery += `content LIKE "%${keyword}%"`
+        }
+    });
+    
+    const query = `
+        SELECT p.postIdx, u.userIdx, u.nickname, u.email, p.content, p.createdAt
+        FROM Post p
+        JOIN User u
+        ON p.userIdx = u.userIdx
+        WHERE (
+            ${whereQuery}
+        );
+    `;
+    const [postRows] = await connection.query(query);
+    return postRows;
+}
+
 exports.deleteComment = async (connection, params) => {
     const { commentIdx } = params;
     const query = `
