@@ -75,7 +75,17 @@ exports.deleteComment = async (req, res) => {
 
 };
 
-
+exports.updateComment = async (req, res) => {
+    const serviceParams = {
+        postIdx: req.params.posdId,
+        commentIdx: req.params.commentId,
+        userIdx: req.user.userIdx,
+        content: req.body.content
+    };
+    
+    const updateCommentRes = await postService.updateComment(serviceParams);
+    return res.send(updateCommentRes);
+}
 
 exports.createLikeOrBookmark = async (req, res) => {
     const postIdx = req.params.id;

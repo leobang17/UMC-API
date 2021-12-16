@@ -107,6 +107,16 @@ exports.deleteComment = async (connection, params) => {
     return commentRows;
 }
 
+exports.updateComment = async (connection, params) => {
+    const { commentIdx, content } = params;
+    const query = `
+        UPDATE Comment
+        SET content = "${content}"
+        WHERE commentIdx = "${commentIdx}";
+    `;
+    const [commentRes] = await connection.query(query);
+    return commentRes;
+}
 
 exports.createLikeOrBookmark = async (connection, params) => {
     const { userIdx, postIdx, targetTable } = params; 

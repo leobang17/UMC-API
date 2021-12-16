@@ -136,6 +136,28 @@ exports.deleteComment = async (params) => {
     };
 }
 
+exports.updateComment = async (params) => {
+    const { userIdx, postIdx, commentIdx, content } = params;
+    try {
+        const commentExist = await postProvider.commentCheck({ commentIdx });
+        if (!commentExist) {
+            return errResponse(baseResponse.COMMENT_NOT_EXIST);
+        };
+        if (commentExist.userIdx !== userIdx) {
+            return errResponse(baseResponse.DELETE_COMMENT_WRONG_USER);
+        };
+
+        const connection = await pool.getConnection();
+        const updateCommentRes = await postDao.updateComment(connection, { commentIdx, content });
+        connection.release();
+
+        return updateCommentRes, response(baseResponse.SUCCESS);
+    } catch (err) {
+        console.error(err);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+}
+
 exports.createLikeOrBookmark = async (params) => {
     const { postIdx, userIdx, targetTable } = params;
 
