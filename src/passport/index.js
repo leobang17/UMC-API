@@ -25,8 +25,8 @@ const saveUserInfo = async (req, res, next) => {
         };
 
         return res.send(errResponse(baseResponse.TOKEN_VERIFICATION_FAILURE));
-    }
-}
+    };
+};
 
 
 module.exports = saveUserInfo;

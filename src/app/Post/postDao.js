@@ -20,6 +20,16 @@ exports.createImgUrl = async (connection, params) => {
         ("${postIdx}", "${imgUrlIter.url}")
     `;
     connection.query(query);
+};
+
+exports.deleteImgUrl = async (connection, params) => {
+    const { postIdx } = params;
+    const query = `
+        DELETE FROM PostImg
+        WHERE postIdx = "${postIdx}";
+    `;
+    const [imgUrlRows] = await connection.query(query);
+    return imgUrlRows;
 }
 
 exports.getPost = async (connection, params) => {
@@ -32,6 +42,17 @@ exports.getPost = async (connection, params) => {
         WHERE p.postIdx = "${postIdx}"
     `;
     const [[postRows]] = await connection.query(query);
+    return postRows;
+}
+
+exports.updatePost = async (connection, params) => {
+    const { postIdx, content } = params;
+    const query = `
+        UPDATE Post
+        SET content = "${content}"
+        WHERE postIdx = "${postIdx}";
+    `;
+    const [postRows] = await connection.query(query);
     return postRows;
 }
 
@@ -122,7 +143,7 @@ exports.commentCheck = async (connection, params) => {
     const [[commentRows]] = await connection.query(query);
     return commentRows;
     
-}
+};
 
 
 exports.likeOrBookmarkCheck = async (connection, params) => {
@@ -134,4 +155,4 @@ exports.likeOrBookmarkCheck = async (connection, params) => {
     `;
     const [likeOrBookmarkRows] = await connection.query(query);
     return likeOrBookmarkRows;
-}
+};

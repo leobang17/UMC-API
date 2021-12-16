@@ -45,6 +45,28 @@ exports.getPost = async ({ postIdx }) => {
   }
 };
 
+exports.updatePost = async (params) => {
+    const { userIdx, postIdx, content, imgUrl } = params;
+    try {
+        const checkPostRes = await this.getPost({ postIdx });
+        if (checkPostRes.userIdx !== userIdx) 
+            return errResponse(baseResponse.UPDATE_POST_WRONG_USER);
+
+        const connection = await pool.getConnection(async (conn) => conn);
+        const updatePostRes = await postDao.updatePost(connection, { postIdx, content });
+        const deleteImgUrlRes = await postDao.deleteImgUrl(connection, { postIdx });
+
+        for (let imgUrlIter of imgUrl) {
+            await postDao.createImgUrl(connection, { imgUrlIter, postIdx });
+        }
+
+        connection.release();
+        return updatePostRes, deleteImgUrlRes, response(baseResponse.SUCCESS);
+    } catch(err) {
+        console.log(err);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+}
 
 exports.deletePost = async (serviceParams) => {
     const { userIdx, postIdx } = serviceParams;
@@ -90,7 +112,7 @@ exports.createComment = async (params) => {
     } catch (err) {
         console.error(err);
         return errResponse(baseResponse.DB_ERROR);
-    }   
+    };
 }
 
 exports.deleteComment = async (params) => {
@@ -99,10 +121,10 @@ exports.deleteComment = async (params) => {
         const commentExist = await postProvider.commentCheck({ commentIdx });
         if (!commentExist) {
             return errResponse(baseResponse.COMMENT_NOT_EXIST);
-        }
+        };
         if (commentExist.userIdx !== userIdx) {
             return errResponse(baseResponse.DELETE_COMMENT_WRONG_USER);
-        }
+        };
 
         const connection = await pool.getConnection();
         const deleteCommentRes = await postDao.deleteComment(connection, { commentIdx });
@@ -111,7 +133,7 @@ exports.deleteComment = async (params) => {
     } catch(err) {
         console.error(err);
         return errResponse(baseResponse.DB_ERROR);
-    }
+    };
 }
 
 exports.createLikeOrBookmark = async (params) => {
