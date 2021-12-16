@@ -44,6 +44,7 @@ module.exports = {
     BOOKMARK_EMPTY : { "isSuccess": false, "code": 2023, "message": "북마크가 되어있지 않은 상태 입니다." },
         
     DELETE_POST_WRONG_USER : { "isSuccess": false, "code": 2024, "message": "본인이 작성한 글만 삭제할 수 있습니다"},
+    UPDATE_POST_WRONG_USER : { "isSuccess": false, "code": 2024, "message": "본인이 작성한 글만 수정할 수 있습니다"},
     POST_NOT_EXIST: { "isSuccess": false, "code": 2025, "message": "존재하지 않는 포스트 입니다"},
 
     COMMENT_NOT_EXIST: { "isSuccess": false, "code": 2026, "message": "존재하지 않는 댓글입니다" },
