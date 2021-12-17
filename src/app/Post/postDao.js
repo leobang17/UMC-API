@@ -11,6 +11,17 @@ exports.createPost = async (connection, params) => {
     return postRows;
 }
 
+exports.getImgUrl = async (connection, params) => {
+    const { postIdx } = params;
+    const query = `
+        SELECT postImgIdx, postIdx, imgUrl
+        FROM PostImg
+        WHERE postIdx = "${postIdx}";
+    `;
+    const [imgUrlRows] = await connection.query(query);
+    return imgUrlRows;
+}
+
 exports.createImgUrl = async (connection, params) => {
     const { imgUrlIter, postIdx } = params;
     const query = `

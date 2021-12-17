@@ -50,6 +50,12 @@ exports.searchPost = async (params) => {
         const connection = await pool.getConnection(async (conn) => conn);
         const searchPostRes = await postDao.searchPost(connection, { keywords });
         connection.release()
+
+        await Promise.all(searchPostRes.map(async (iter) => {
+            const imgUrlRes = await postProvider.getImgUrl({ postIdx: iter.postIdx });
+            iter.imgUrls = imgUrlRes;
+        }));
+
         return searchPostRes;
     } catch(err) {
         console.error(err);
@@ -70,7 +76,7 @@ exports.updatePost = async (params) => {
 
         for (let imgUrlIter of imgUrl) {
             await postDao.createImgUrl(connection, { imgUrlIter, postIdx });
-        }
+        };
 
         connection.release();
         return updatePostRes, deleteImgUrlRes, response(baseResponse.SUCCESS);
