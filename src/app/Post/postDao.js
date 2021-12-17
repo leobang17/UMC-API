@@ -231,3 +231,17 @@ exports.hashtagCheck = async (connection, params) => {
     const [[hashtagRows]] = await connection.query(query);
     return hashtagRows;
 }
+
+exports.getHashtagByPost = async (connection, params) => {
+    const { postIdx } = params;
+    const query = `
+        SELECT h.hashtagIdx, h.name
+        FROM TagIntermediate ti
+        JOIN Hashtag h
+        ON ti.hashtagIdx = h.hashtagIdx
+        WHERE postIdx = "${postIdx}";
+    `;
+
+    const [hashtagRows] = await connection.query(query);
+    return hashtagRows;
+}

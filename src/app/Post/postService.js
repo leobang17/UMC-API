@@ -15,12 +15,8 @@ exports.createPost = async (params) => {
         for (let imgUrlIter of imgUrl) {
             await postDao.createImgUrl(connection, { imgUrlIter, postIdx });
         }
-
-        
         connection.release();
         for (let hashtagIter of hashtag) {
-            // hashtag get 했는데 있으면, 중계모델만 연결해주고.
-            // hashtag get 했는데 없으면, hashtag 생성하고 중계모델 생성.
             const hashtagExists = await postProvider.hashtagCheck({ hashtag: hashtagIter });
             let hashtagIdx;
             if (!hashtagExists) {
@@ -29,7 +25,8 @@ exports.createPost = async (params) => {
                 hashtagIdx = hashtagExists.hashtagIdx;
             }
             await this.createHashtagInter({ hashtagIdx, postIdx });
-        }
+        };
+
         return response(baseResponse.SUCCESS);
     } catch(err) {
         console.error(err);
@@ -48,9 +45,12 @@ exports.getPost = async ({ postIdx }) => {
         }
 
         const getPostImgRes = await postDao.getPostImg(connection, { postIdx });
-        getPostRes.imgUrl = getPostImgRes;
-
+        getPostRes.imgUrls = getPostImgRes;
         connection.release();
+
+        const getHashtagRes = await postProvider.getHashtagByPost({ postIdx });
+        getPostRes.hashtags = getHashtagRes;
+        
         return getPostRes;
   } catch (err) {
       console.error(err);
