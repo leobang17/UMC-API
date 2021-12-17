@@ -5,7 +5,8 @@ const baseResponse = require('../../../config/baseResponseStatus');
 const { response, errResponse } = require("../../../config/response");
 const { pool } = require('../../../config/database');
 
-exports.createPost = async ({ userIdx, content, imgUrl }) => {
+exports.createPost = async (params) => {
+    const { userIdx, content, imgUrl, hashtag } = params;
     try {
         const connection = await pool.getConnection(async (conn) => conn);
         const createPostRes = await postDao.createPost(connection, { userIdx, content });
@@ -14,8 +15,21 @@ exports.createPost = async ({ userIdx, content, imgUrl }) => {
         for (let imgUrlIter of imgUrl) {
             await postDao.createImgUrl(connection, { imgUrlIter, postIdx });
         }
+
         
         connection.release();
+        for (let hashtagIter of hashtag) {
+            // hashtag get 했는데 있으면, 중계모델만 연결해주고.
+            // hashtag get 했는데 없으면, hashtag 생성하고 중계모델 생성.
+            const hashtagExists = await postProvider.hashtagCheck({ hashtag: hashtagIter });
+            let hashtagIdx;
+            if (!hashtagExists) {
+                hashtagIdx = await this.createHashtag({ hashtag: hashtagIter });
+            } else {
+                hashtagIdx = hashtagExists.hashtagIdx;
+            }
+            await this.createHashtagInter({ hashtagIdx, postIdx });
+        }
         return response(baseResponse.SUCCESS);
     } catch(err) {
         console.error(err);
@@ -170,6 +184,33 @@ exports.updateComment = async (params) => {
         connection.release();
 
         return updateCommentRes, response(baseResponse.SUCCESS);
+    } catch (err) {
+        console.error(err);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+}
+
+exports.createHashtag = async (params) => {
+    const { hashtag } = params;
+    try {
+        const connection = await pool.getConnection(async (conn) => conn);
+        const createHashtagRes = await postDao.createHashtag(connection, { hashtag });
+
+        connection.release();
+
+        return createHashtagRes.insertId;
+    } catch(err) {
+        console.error(err);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+};
+
+exports.createHashtagInter = async (params) => {
+    const { hashtagIdx, postIdx } = params;
+    try {
+        const connection = await pool.getConnection(async (conn) => conn);
+        await postDao.createHashtagInter(connection, { hashtagIdx, postIdx });
+        connection.release();
     } catch (err) {
         console.error(err);
         return errResponse(baseResponse.DB_ERROR);

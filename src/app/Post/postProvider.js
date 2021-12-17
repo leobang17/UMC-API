@@ -44,3 +44,17 @@ exports.getImgUrl = async (params) => {
         return errResponse(baseResponse.DB_ERROR);
     }
 }
+
+exports.hashtagCheck = async (params) => {
+    const { hashtag } = params;
+    try {
+        const connection = await pool.getConnection(async (conn) => conn);
+        const hashtagCheckRes = await postDao.hashtagCheck(connection, { hashtag });
+        connection.release();
+
+        return hashtagCheckRes;
+    } catch(err) {
+        console.error(err);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+}

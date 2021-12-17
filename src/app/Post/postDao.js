@@ -176,6 +176,24 @@ exports.deleteLikeOrBookmark = async (connection, params) => {
     return likeOrBookmarkRows;
 }
 
+exports.createHashtag = async (connection, params) => {
+    const { hashtag } = params
+    const query = `
+        INSERT INTO Hashtag (name)
+        VALUES ("${hashtag}")
+    `
+    const [hashtagRows] = await connection.query(query);
+    return hashtagRows;
+}
+
+exports.createHashtagInter = async (connection, params) => {
+    const { hashtagIdx, postIdx } = params;
+    const query = `
+        INSERT INTO TagIntermediate (hashtagIdx, postIdx)
+        VALUES ("${hashtagIdx}", "${postIdx}");
+    `;
+    await connection.query(query);
+}
 
 // Provider
 exports.commentCheck = async (connection, params) => {
@@ -201,3 +219,15 @@ exports.likeOrBookmarkCheck = async (connection, params) => {
     const [likeOrBookmarkRows] = await connection.query(query);
     return likeOrBookmarkRows;
 };
+
+exports.hashtagCheck = async (connection, params) => {
+    const { hashtag } = params;
+    const query = `
+        SELECT hashtagIdx, name
+        FROM Hashtag
+        WHERE name = "${hashtag}";
+    `;
+
+    const [[hashtagRows]] = await connection.query(query);
+    return hashtagRows;
+}

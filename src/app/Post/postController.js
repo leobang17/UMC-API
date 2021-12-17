@@ -11,12 +11,12 @@ exports.getMainFeeds = async (req, res) => {
 
 exports.createPost = async (req, res) => {
     const { userIdx } = req.user;
-    const { content, imgUrl } = req.body;
+    const { content, imgUrl, hashtag } = req.body;
     
     if (!content) 
         return res.send(response(baseResponse.POST_CONTENT_EMPTY));
     
-    const createPostRes = await postService.createPost({ userIdx, content, imgUrl });
+    const createPostRes = await postService.createPost({ userIdx, content, imgUrl, hashtag });
     return res.send(createPostRes);
 };
 
