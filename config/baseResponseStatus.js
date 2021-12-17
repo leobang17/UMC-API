@@ -59,6 +59,10 @@ module.exports = {
     SIGNIN_INACTIVE_ACCOUNT : { "isSuccess": false, "code": 3005, "message": "비활성화 된 계정입니다. 고객센터에 문의해주세요." },
     SIGNIN_WITHDRAWAL_ACCOUNT : { "isSuccess": false, "code": 3006, "message": "탈퇴 된 계정입니다. 고객센터에 문의해주세요." },
 
+    USER_IS_SELF: { "isSuccess": false, "code": 3007, "message": "본인은 팔로우/언팔로우 할 수 없습니다" },
+    USER_ALREADY_FOLLOWING: { "isSuccess": false, "code": 3008, "message": "이미 팔로우하고 있는 계정입니다" },
+    USER_ALREADY_UNFOLLOWING: { "isSuccess": false, "code": 3009, "message": "이미 팔로우하지 않고 있는 계정입니다" },
+
     //Connection, Transaction 등의 서버 오류
     DB_ERROR : { "isSuccess": false, "code": 4000, "message": "데이터 베이스 에러"},
     SERVER_ERROR : { "isSuccess": false, "code": 4001, "message": "서버 에러"}, 
