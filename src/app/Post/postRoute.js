@@ -49,7 +49,7 @@ router.route('/:postId/comment/:commentId')
     .patch(post.updateComment)
 
 
-router.get('/hashtag/:id')
+router.get('/hashtag/:id', post.getPostByHashtag);
 
 
 

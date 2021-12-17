@@ -58,6 +58,27 @@ exports.getPost = async ({ postIdx }) => {
   }
 };
 
+exports.getPostByHashtag = async (params) => {
+    const { hashtagIdx } = params;
+    try {
+        const connection = await pool.getConnection(async (conn) => conn);
+        const getPostRes = await postDao.getPostByHashtag(connection, { hashtagIdx });
+        connection.release();
+
+        await Promise.all(getPostRes.map(async (iter) => {
+            const imgUrlRes = await postProvider.getImgUrl({ postIdx: iter.postIdx });
+            const getHashtagRes = await postProvider.getHashtagByPost({ postIdx: iter.postIdx});
+            iter.imgUrls = imgUrlRes;
+            iter.hashtags = getHashtagRes;
+        }));
+
+        return getPostRes;
+    } catch(err) {
+        console.error(err);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+}
+
 exports.searchPost = async (params) => {
     const { keywords } = params;
     try {
@@ -67,13 +88,10 @@ exports.searchPost = async (params) => {
 
         await Promise.all(searchPostRes.map(async (iter) => {
             const imgUrlRes = await postProvider.getImgUrl({ postIdx: iter.postIdx });
-            iter.imgUrls = imgUrlRes;
-        }));
-
-        await Promise.all(searchPostRes.map(async (iter) => {
             const getHashtagRes = await postProvider.getHashtagByPost({ postIdx: iter.postIdx});
+            iter.imgUrls = imgUrlRes;
             iter.hashtags = getHashtagRes;
-        }))
+        }));
 
         return searchPostRes;
     } catch(err) {
@@ -121,8 +139,8 @@ exports.deletePost = async (serviceParams) => {
             return errResponse(baseResponse.DELETE_POST_WRONG_USER);
         };
 
+        // 삭제하는 post가 소유한 hashtag가 마지막 남은 hashtag인지 확인하고, 맞다면 table에서 지워준다. 
         const hashtagCountRes = await postProvider.getHashtagCount({ postIdx });
-        console.log("으으", hashtagCountRes);
         Promise.all(hashtagCountRes.map(async (iter) => {
             if (iter.count === 1) {
                 await this.deleteHashtag({ hashtagIdx: iter.hashtagIdx });

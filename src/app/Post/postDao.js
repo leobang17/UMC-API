@@ -56,6 +56,23 @@ exports.getPost = async (connection, params) => {
     return postRows;
 }
 
+exports.getPostByHashtag = async (connection, params) => {
+    const { hashtagIdx } = params;
+    const query = `
+        SELECT p.postIdx, u.userIdx, u.nickname, p.content, p.createdAt
+        FROM Post p
+        JOIN User u
+        ON u.userIdx = p.userIdx
+        WHERE p.postIdx in (
+            SELECT postIdx 
+            FROM TagIntermediate t
+            WHERE t.hashtagIdx = "${hashtagIdx}"
+        );    
+    `;
+    const [postRows] = await connection.query(query);
+    return postRows;
+}
+
 exports.updatePost = async (connection, params) => {
     const { postIdx, content } = params;
     const query = `
@@ -269,7 +286,6 @@ exports.getHashtagCount = async (connection, params) => {
             )
         GROUP BY im.hashtagIdx;
     `;
-
     const [hashtagRows] = await connection.query(query);
     return hashtagRows;
 };

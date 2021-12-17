@@ -28,6 +28,13 @@ exports.getPost = async (req, res) => {
     return res.send(getPostRes);
 }
 
+exports.getPostByHashtag = async (req, res) => {
+    const hashtagIdx = req.params.id;
+    const getPostRes = await postService.getPostByHashtag({ hashtagIdx });
+
+    return res.send(getPostRes);
+}
+
 exports.updatePost = async (req, res) => {
     const { content, imgUrl } = req.body;
     const params = {
