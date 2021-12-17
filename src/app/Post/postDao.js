@@ -84,7 +84,8 @@ exports.getMainFeeds = async (connection, params) => {
             SELECT followingIdx 
             FROM Follow
             WHERE followerIdx = "${userIdx}"
-        );   
+        )
+        ORDER BY p.createdAt DESC;   
     `;
     const [postRows] = await connection.query(query);
     return postRows;
