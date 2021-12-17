@@ -1,11 +1,15 @@
 const postService = require('./postService');
-const postProvider = require('./postProvider');
 
 const baseResponse = require('../../../config/baseResponseStatus');
 const { response, errResponse } = require('../../../config/response');
 
 exports.getMainFeeds = async (req, res) => {
-    const userInfo = req.user;
+    const params = {
+        userIdx: req.user.userIdx
+    };
+    const mainFeedRes = await postService.getMainFeeds(params);
+
+    return res.send(mainFeedRes)
 }
 
 

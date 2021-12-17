@@ -17,7 +17,7 @@ router.get('/test', async (req, res) => {
 });
 
 router.route('/')
-    // .get(post.getMainFeeds)
+    .get(post.getMainFeeds)
     .post(post.createPost)
 
 router.get('/search', post.searchPost);

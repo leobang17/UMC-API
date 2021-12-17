@@ -77,7 +77,7 @@ exports.getPostByHashtag = async (params) => {
         console.error(err);
         return errResponse(baseResponse.DB_ERROR);
     }
-}
+};
 
 exports.searchPost = async (params) => {
     const { keywords } = params;
@@ -98,7 +98,29 @@ exports.searchPost = async (params) => {
         console.error(err);
         return errResponse(baseResponse.DB_ERROR);
     }
-}
+};
+
+exports.getMainFeeds = async (params) => {
+    const { userIdx } = params;
+    
+    try {
+        const connection = await pool.getConnection(async (conn) => conn);
+        const mainFeedRes = await postDao.getMainFeeds(connection, { userIdx });
+        connection.release();
+
+        await Promise.all(mainFeedRes.map(async (iter) => {
+            const imgUrlRes = await postProvider.getImgUrl({ postIdx: iter.postIdx });
+            const getHashtagRes = await postProvider.getHashtagByPost({ postIdx: iter.postIdx});
+            iter.imgUrls = imgUrlRes;
+            iter.hashtags = getHashtagRes;
+        }));
+
+        return mainFeedRes;
+    } catch(err) {
+        console.error(err);
+        return errResponse(baseResponse.DB_ERROR);
+    };
+};
 
 exports.updatePost = async (params) => {
     const { userIdx, postIdx, content, imgUrl } = params;
