@@ -186,6 +186,15 @@ exports.createHashtag = async (connection, params) => {
     return hashtagRows;
 }
 
+exports.deleteHashtag = async (connection, params) => {
+    const { hashtagIdx } = params;
+    const query = `
+        DELETE FROM Hashtag
+        WHERE hashtagIdx = "${hashtagIdx}";
+    `;
+    await connection.query(query);
+}   
+
 exports.createHashtagInter = async (connection, params) => {
     const { hashtagIdx, postIdx } = params;
     const query = `
@@ -245,3 +254,22 @@ exports.getHashtagByPost = async (connection, params) => {
     const [hashtagRows] = await connection.query(query);
     return hashtagRows;
 }
+
+exports.getHashtagCount = async (connection, params) => {
+    const { postIdx } = params;
+    const query = `
+        SELECT im.hashtagIdx, h.name, count(*) as "count"
+        FROM tagIntermediate im
+        JOIN hashtag h 
+        ON h.hashtagIdx = im.hashtagIdx
+        WHERE im.hashtagIdx in (
+                SELECT hashtagIdx 
+                FROM TagInterMediate 
+                WHERE postIdx = "${postIdx}"
+            )
+        GROUP BY im.hashtagIdx;
+    `;
+
+    const [hashtagRows] = await connection.query(query);
+    return hashtagRows;
+};

@@ -71,4 +71,18 @@ exports.getHashtagByPost = async (params) => {
         console.error(err);
         return errResponse(baseResponse.DB_ERROR);
     }
+};
+
+exports.getHashtagCount = async (params) => {
+    const { postIdx } = params;
+    try {
+        const connection = await pool.getConnection(async (conn) => conn);
+        const getHashtagCountRes = await postDao.getHashtagCount(connection, { postIdx });
+        connection.release();
+
+        return getHashtagCountRes;
+    } catch(err) {
+        console.error(err);
+        return errResponse(baseResponse.DB_ERROR);
+    }
 }

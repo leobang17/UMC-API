@@ -50,7 +50,7 @@ exports.getPost = async ({ postIdx }) => {
 
         const getHashtagRes = await postProvider.getHashtagByPost({ postIdx });
         getPostRes.hashtags = getHashtagRes;
-        
+
         return getPostRes;
   } catch (err) {
       console.error(err);
@@ -69,6 +69,11 @@ exports.searchPost = async (params) => {
             const imgUrlRes = await postProvider.getImgUrl({ postIdx: iter.postIdx });
             iter.imgUrls = imgUrlRes;
         }));
+
+        await Promise.all(searchPostRes.map(async (iter) => {
+            const getHashtagRes = await postProvider.getHashtagByPost({ postIdx: iter.postIdx});
+            iter.hashtags = getHashtagRes;
+        }))
 
         return searchPostRes;
     } catch(err) {
@@ -115,6 +120,14 @@ exports.deletePost = async (serviceParams) => {
             connection.release();
             return errResponse(baseResponse.DELETE_POST_WRONG_USER);
         };
+
+        const hashtagCountRes = await postProvider.getHashtagCount({ postIdx });
+        console.log("으으", hashtagCountRes);
+        Promise.all(hashtagCountRes.map(async (iter) => {
+            if (iter.count === 1) {
+                await this.deleteHashtag({ hashtagIdx: iter.hashtagIdx });
+            };
+        }));
         
         const deletePostRes = await postDao.deletePost(connection, { userIdx, postIdx });
         connection.release();
@@ -204,6 +217,20 @@ exports.createHashtag = async (params) => {
         return errResponse(baseResponse.DB_ERROR);
     }
 };
+
+exports.deleteHashtag = async (params) => {
+    const { hashtagIdx } = params;
+    try {
+        const connection = await pool.getConnection(async (conn) => conn);
+        const deleteHashtagRes = await postDao.deleteHashtag(connection, { hashtagIdx });
+        connection.release();
+
+        return deleteHashtagRes;
+    } catch(err) {
+        console.error(err);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+}
 
 exports.createHashtagInter = async (params) => {
     const { hashtagIdx, postIdx } = params;
