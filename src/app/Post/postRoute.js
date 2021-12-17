@@ -20,8 +20,9 @@ router.route('/')
     // .get(post.getMainFeeds)
     .post(post.createPost)
 
-
 router.get('/search', post.searchPost);
+
+router.get('/hashtag/:id', post.getPostByHashtag);
 
 router.route('/:id')
     .get(post.getPost)
@@ -47,11 +48,6 @@ router.route('/:id/comment')
 router.route('/:postId/comment/:commentId')
     .delete(post.deleteComment)
     .patch(post.updateComment)
-
-
-router.get('/hashtag/:id', post.getPostByHashtag);
-
-
 
 
 module.exports = router;
