@@ -35,4 +35,11 @@ exports.getPostByUser = async (req, res) => {
     const getPostRes = await userService.getPostByUser({ userIdx });
 
     return res.send(getPostRes);
+};
+
+exports.getPostByLike = async (req, res) => {
+    const userIdx = req.params.id;
+    const getPostRes = await userService.getPostByLike({ userIdx });
+
+    return res.send(getPostRes);
 }

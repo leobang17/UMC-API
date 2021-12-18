@@ -12,7 +12,7 @@ router.route('/follow/:id')
 router.get('/:id');
 
 router.get('/:id/posts', user.getPostByUser);
-router.get('/:id/likes')
+router.get('/:id/likes', user.getPostByLike);
 router.get('/:id/bookmarks')
 router.get('/:id/following')
 router.get('/:id/followers')

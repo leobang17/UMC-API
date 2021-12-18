@@ -66,5 +66,31 @@ exports.getPostByUser = async (params) => {
     } catch(err) {
         console.error(err);
         return errResponse(baseResponse.DB_ERROR);
-    }
-}
+    };
+};
+
+exports.getPostByLike = async (params) => {
+    const { userIdx } = params;
+    try {
+        const userExist = await userProvider.checkUser({ userIdx });
+        if (!userExist)
+            return errResponse(baseResponse.USER_NOT_EXIST);
+
+        const connection = await pool.getConnection(async (conn) => conn);
+        const getPostRes = await userDao.getPostByLike(connection, { userIdx });
+        connection.release();
+
+        await Promise.all(getPostRes.map(async (iter) => {
+            const imgUrlRes = await postProvider.getImgUrl({ postIdx: iter.postIdx });
+            const getHashtagRes = await postProvider.getHashtagByPost({ postIdx: iter.postIdx});
+            iter.imgUrls = imgUrlRes;
+            iter.hashtags = getHashtagRes;
+        }));       
+
+        return getPostRes;
+    } catch(err) {
+        console.error(err);
+        return errResponse(baseResponse.DB_ERROR);
+    };
+
+};
