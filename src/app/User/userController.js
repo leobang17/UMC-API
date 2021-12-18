@@ -37,9 +37,20 @@ exports.getPostByUser = async (req, res) => {
     return res.send(getPostRes);
 };
 
-exports.getPostByLike = async (req, res) => {
-    const userIdx = req.params.id;
-    const getPostRes = await userService.getPostByLike({ userIdx });
+exports.getPostByLikeOrBookmark = async (req, res) => {
+    const params = {
+        userIdx: req.params.id
+    };
+
+    const path = req.route.path.split('/');
+
+    if (path[path.length - 1] === "likes") {
+        params.type = "PostLike"; 
+    } else if (path[path.length - 1] === "bookmarks") {
+        params.type = "Bookmark";
+    };
+
+    const getPostRes = await userService.getPostByLikeOrBookmark(params);
 
     return res.send(getPostRes);
 }

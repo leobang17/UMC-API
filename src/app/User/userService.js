@@ -69,15 +69,15 @@ exports.getPostByUser = async (params) => {
     };
 };
 
-exports.getPostByLike = async (params) => {
-    const { userIdx } = params;
+exports.getPostByLikeOrBookmark = async (params) => {
+    const { userIdx, type } = params;
     try {
         const userExist = await userProvider.checkUser({ userIdx });
         if (!userExist)
             return errResponse(baseResponse.USER_NOT_EXIST);
 
         const connection = await pool.getConnection(async (conn) => conn);
-        const getPostRes = await userDao.getPostByLike(connection, { userIdx });
+        const getPostRes = await userDao.getPostByLikeOrBookmark(connection, { userIdx, type });
         connection.release();
 
         await Promise.all(getPostRes.map(async (iter) => {

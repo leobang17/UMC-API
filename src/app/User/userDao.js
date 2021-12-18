@@ -38,8 +38,8 @@ exports.getPostByUser = async (connection, params) => {
     return postRows;
 };
 
-exports.getPostByLike = async (connection, params) => {
-    const { userIdx } = params;
+exports.getPostByLikeOrBookmark = async (connection, params) => {
+    const { userIdx, type } = params;
     const query = `
         SELECT p.postIdx, u.userIdx, u.nickname, p.content, p.createdAt
         FROM Post p
@@ -47,7 +47,7 @@ exports.getPostByLike = async (connection, params) => {
         ON u.userIdx = p.userIdx
         WHERE p.postIdx in (
             SELECT postIdx 
-            FROM PostLike
+            FROM ${type}
             WHERE userIdx = "${userIdx}"
         )
         ORDER BY p.createdAt DESC;
@@ -55,7 +55,7 @@ exports.getPostByLike = async (connection, params) => {
 
     const [postRows] = await connection.query(query);
     return postRows;
-}
+};
 
 exports.checkFollow = async (connection, params) => {
     const { myIdx, followingIdx } = params;
