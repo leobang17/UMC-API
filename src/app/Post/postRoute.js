@@ -1,5 +1,4 @@
 const express = require('express');
-const { verifyToken } = require('../../middlewares/index');
 const { pool } = require('../../../config/database');
 const post = require('./postController');
 
@@ -41,7 +40,6 @@ router.route('/:id/bookmark')
 
 
 router.route('/:id/comment')
-    .get()
     .post(post.createComment)
 
 

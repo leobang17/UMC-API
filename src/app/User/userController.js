@@ -29,3 +29,10 @@ exports.deleteFollow = async (req, res) => {
 
     return res.send(deleteFollowRes);
 }
+
+exports.getPostByUser = async (req, res) => {
+    const userIdx = req.params.id;
+    const getPostRes = await userService.getPostByUser({ userIdx });
+
+    return res.send(getPostRes);
+}

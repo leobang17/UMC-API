@@ -18,3 +18,17 @@ exports.checkFollow = async (params) => {
         return errResponse(baseResponse.DB_ERROR);
     }
 }
+
+exports.checkUser = async (params) => {
+    const { userIdx } = params;
+    try {
+        const connection = await pool.getConnection(async(conn) => conn);
+        const checkUserRes = await userDao.checkUser(connection, { userIdx });
+        connection.release();
+
+        return checkUserRes;
+    } catch(err) {
+        console.error(err);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+}
