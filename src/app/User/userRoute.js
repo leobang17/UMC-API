@@ -14,8 +14,8 @@ router.get('/:id');
 router.get('/:id/posts', user.getPostByUser);
 router.get('/:id/likes', user.getPostByLikeOrBookmark);
 router.get('/:id/bookmarks', user.getPostByLikeOrBookmark)
-router.get('/:id/following')
-router.get('/:id/followers')
+router.get('/:id/following', user.getUserByFollow)
+router.get('/:id/followers', user.getUserByFollow)
 
 
 module.exports = router;

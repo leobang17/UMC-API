@@ -92,5 +92,23 @@ exports.getPostByLikeOrBookmark = async (params) => {
         console.error(err);
         return errResponse(baseResponse.DB_ERROR);
     };
-
 };
+
+exports.getUserByFollow = async (params) => {
+    const { userIdx, whereCondition, selectCondition } = params;
+
+    try {
+        const userExist = await userProvider.checkUser({ userIdx });
+        if (!userExist)
+            return errResponse(baseResponse.USER_NOT_EXIST);
+
+        const connection = await pool.getConnection(async (conn) => conn);
+        const getUserRes = await userDao.getUserByFollow(connection, { userIdx, whereCondition, selectCondition });
+        connection.release();
+
+        return getUserRes;
+    } catch(err) {
+        console.error(err);
+        return errResponse(baseResponse.DB_ERROR);
+    }
+}

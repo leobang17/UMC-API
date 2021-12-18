@@ -53,4 +53,23 @@ exports.getPostByLikeOrBookmark = async (req, res) => {
     const getPostRes = await userService.getPostByLikeOrBookmark(params);
 
     return res.send(getPostRes);
+};
+
+exports.getUserByFollow = async (req, res) => {
+    const params = {
+        userIdx: req.params.id,
+    };
+    const path = req.route.path.split('/');
+
+    if (path[path.length - 1] === "followers") {
+        params.whereCondition = "followingIdx";
+        params.selectCondition = "followerIdx";
+    } else if (path[path.length - 1] === "following") {
+        params.whereCondition = "followerIdx";
+        params.selectCondition = "followingIdx";
+    };
+
+    const getPostRes = await userService.getUserByFollow(params);
+    
+    return res.send(getPostRes);
 }

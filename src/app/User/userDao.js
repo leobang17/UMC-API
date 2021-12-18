@@ -57,6 +57,24 @@ exports.getPostByLikeOrBookmark = async (connection, params) => {
     return postRows;
 };
 
+exports.getUserByFollow = async (connection, params) => {
+    const { userIdx, whereCondition, selectCondition } = params;
+    const query = `
+        SELECT userIdx, nickname, email
+        FROM User
+        WHERE userIdx in (
+            SELECT ${selectCondition} 
+            FROM Follow
+            WHERE ${whereCondition} = "${userIdx}"
+        );
+    `;
+    
+    const [userRows] = await connection.query(query);
+    return userRows;
+}
+
+
+// Provider
 exports.checkFollow = async (connection, params) => {
     const { myIdx, followingIdx } = params;
     const query = `
