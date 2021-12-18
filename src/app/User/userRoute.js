@@ -9,7 +9,7 @@ router.route('/follow/:id')
     .post(user.createFollow)
     .delete(user.deleteFollow);
 
-router.get('/:id');
+router.get('/:id', user.getProfile);
 
 router.get('/:id/posts', user.getPostByUser);
 router.get('/:id/likes', user.getPostByLikeOrBookmark);

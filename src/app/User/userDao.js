@@ -71,6 +71,26 @@ exports.getUserByFollow = async (connection, params) => {
     
     const [userRows] = await connection.query(query);
     return userRows;
+};
+
+exports.getProfile = async (connection, params) => {
+    const { userIdx } = params;
+    console.log(userIdx);
+    const query = `
+        SELECT 
+            userIdx, nickname, email, introduction, profileImgUrl, createdAt,
+            (SELECT count(*) 
+            FROM Follow 
+            WHERE followingIdx = "${userIdx}") as followerCount,
+            (SELECT count(*)
+            FROM follow
+            WHERE followerIdx = "${userIdx}") as followingCount
+        FROM User
+        WHERE userIdx = "${userIdx}";
+    `;
+
+    const [profileRows] = await connection.query(query);
+    return profileRows;
 }
 
 

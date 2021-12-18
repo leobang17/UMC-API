@@ -72,4 +72,10 @@ exports.getUserByFollow = async (req, res) => {
     const getPostRes = await userService.getUserByFollow(params);
     
     return res.send(getPostRes);
+};
+
+exports.getProfile = async (req, res) => {
+    const userIdx = req.params.id;
+    const userRes = await userService.getProfile({ userIdx });
+    return res.send(userRes);
 }

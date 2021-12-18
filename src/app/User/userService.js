@@ -110,5 +110,23 @@ exports.getUserByFollow = async (params) => {
     } catch(err) {
         console.error(err);
         return errResponse(baseResponse.DB_ERROR);
-    }
+    };
+};
+
+exports.getProfile = async (params) => {
+    const { userIdx } = params;
+
+    try {
+        const connection = await pool.getConnection(async (conn) => conn);
+        const getUserRes = await userDao.getProfile(connection, { userIdx });
+        connection.release();
+
+        if (getUserRes.length < 1) {
+            return errResponse(baseResponse.USER_NOT_EXIST);
+        }
+        return getUserRes;
+    } catch (err) {
+        console.error(err);
+        return errResponse(baseResponse.DB_ERROR);
+    };
 }
